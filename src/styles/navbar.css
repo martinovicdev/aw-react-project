@@ -1,0 +1,13 @@
+nav.navbar{
+    justify-content: space-between;
+}
+
+nav.navbar a{
+    color: white;
+    margin-left: 1em;
+}
+
+.active{
+    background-color: orange;
+    color: black;
+}

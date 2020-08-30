@@ -7,9 +7,9 @@ import { paginate } from '../services/paginate';
 
 class Customers extends Component {
     state = {
-        customers: [],
-        currentPage: 1,
-        pageSize: 10
+        customers: this.props.customers,
+        currentPage: this.props.currentPage,
+        pageSize: this.props.pageSize
     };
     render() { 
         const { customers: allCustomers, currentPage, pageSize } = this.state;
