@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import TextBox from './text-box'
-import {validateFormWithYup, getPropertyValidationErrorWithYup} from '../services/validationYup'
 import axios from 'axios';
 
-class AddCustomer extends Component {
+class EditCustomer extends Component {
     state ={
         customer:{
             name:'',
             surname:'',
             email:'',
-            telephone:''
+            telephone:'',
+            id:''
         },
         errors:{}
     }
@@ -18,11 +18,18 @@ class AddCustomer extends Component {
 
         const {errors} =this.state;
         return (
-            <div className="add-customer">
-                <h1>Add customer</h1>
+            <div className="edit-customer">
+                <h1>Edit customer </h1>
                 <hr/>
                 <div className = "jumbotron">
                     <form onSubmit={this.handleSubmit}>
+                    <TextBox 
+                            labelText = "ID" 
+                            id= "id" 
+                            name ="id" 
+                            placeholder = "Enter user ID"
+                            error = {errors.id}
+                            onChange={this.handleChange}/>
                         <TextBox 
                             labelText = "First Name" 
                             id= "name" 
@@ -52,25 +59,49 @@ class AddCustomer extends Component {
                             error = {errors.telephone}
                             onChange={this.handleChange}/>
 
-                        <button type ="submit" className="btn btn-primary">Add</button>
+                        <button type ="submit" className="btn btn-primary">Edit</button>
                     </form>
                 </div>
             </div>
         )
     }
 
+    getPropertyValidation = ({name, value}) => {
+        switch (name) {
+            case 'id':
+                if(value.trim() === '') return 'ID is required';
+                break;
+            case 'name':
+                if(value.trim() === '') return 'Name is required';
+                break;
+            case 'surname':
+                if(value.trim() === '') return 'Surname is required'; 
+                break;
+            case 'email':
+                if(value.trim() === '') return 'E-mail is required'; 
+                break;
+            case 'telephone':
+                if(value.trim() === '') return 'Telephone is required'; 
+                break;
+            default:
+                break;
+
+        }
+    }
+
     handleSubmit = async (e) =>{
         e.preventDefault();
 
-        const errors = await validateFormWithYup(this.state.customer);
+        const errors = this.validateForm();
+
         this.setState({ errors:errors || {} });
         if(errors) return;
 
-        var data = JSON.stringify({"Name" : this.state.customer.name,"Surname": this.state.customer.surname, "Email": this.state.customer.email,"Telephone": this.state.customer.telephone,"CityId":1});
+        var data = JSON.stringify({"Id": this.state.customer.id ,"Name" : this.state.customer.name,"Surname": this.state.customer.surname, "Email": this.state.customer.email,"Telephone": this.state.customer.telephone,"CityId":1});
 
         var config = {
         method: 'post',
-        url: 'http://www.fulek.com/nks/api/aw/addcustomer',
+        url: 'http://www.fulek.com/nks/api/aw/editcustomer',
         headers: { 
             'Content-Type': 'application/json'
         },
@@ -88,10 +119,10 @@ class AddCustomer extends Component {
 
     handleChange = async ({ currentTarget: input }) => {
         const errors = {...this.state.errors};
-        const errorMessage = await getPropertyValidationErrorWithYup(input);
+        const errorMessage = this.getPropertyValidation(input);
 
         if(errorMessage)
-            errors[input.name] = errorMessage.message;
+            errors[input.name] = errorMessage;
         else 
             delete errors[input.name];
 
@@ -101,6 +132,27 @@ class AddCustomer extends Component {
         this.setState({ customer, errors});
     }
 
+    validateForm = () => {
+        const errors = {};
+        const {customer} = this.state;
+
+        if(customer.id.trim() === '')
+        errors.id = "Id is required";
+
+        if(customer.name.trim() === '')
+            errors.name = "Name is required";
+
+        if(customer.surname.trim() === '')
+            errors.surname = "Surname is required";
+
+        if(customer.email.trim() === '')
+            errors.email = "E-mail is required";
+
+        if(customer.telephone.trim() === '')
+            errors.telephone = "Telephone is required";
+
+        return Object.keys(errors).length === 0 ? null : errors;
+    }
 }
 
-export default AddCustomer;
+export default EditCustomer;

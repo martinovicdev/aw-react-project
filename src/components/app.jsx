@@ -10,6 +10,7 @@ import ShowParameters from './show-params';
 import NotFound from './not-found';
 import ProgramaticNavigation from './programatic-navigation';
 import AddCustomer from './add-customer';
+import EditCustomer from './edit-customer';
 
 
 class App extends Component {
@@ -38,7 +39,8 @@ class App extends Component {
                         <Route path='/params' component={ShowParameters}/>                      
                         <Route path='/not-found' component={NotFound}/> 
                         <Route path='/prog-nav' component={ProgramaticNavigation} exact/>
-                        <Route path='/add-customer' component={AddCustomer} exact/>                       
+                        <Route path='/add-customer' component={AddCustomer} exact/>     
+                        <Route path='/edit-customer' component={EditCustomer} exact/>                    
                         <Route path='/' component={HomePage} exact/>
                         
                         <Redirect to='/not-found' />
