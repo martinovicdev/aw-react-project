@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import TextBox from './text-box'
 import {validateFormWithYup, getPropertyValidationErrorWithYup} from '../services/validationYup'
+import axios from 'axios';
 
 
 class AddCustomer extends Component {
@@ -86,6 +87,25 @@ class AddCustomer extends Component {
         const errors = await validateFormWithYup(this.state.customer);
         this.setState({ errors:errors || {} });
         if(errors) return;
+
+        var data = JSON.stringify({"Name" : this.state.customer.name,"Surname": this.state.customer.surname, "Email": this.state.customer.email,"Telephone": this.state.customer.telephone,"CityId":1});
+
+        var config = {
+        method: 'post',
+        url: 'http://www.fulek.com/nks/api/aw/addcustomer',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
     }
 
     handleChange = async ({ currentTarget: input }) => {

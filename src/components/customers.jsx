@@ -50,17 +50,38 @@ class Customers extends Component {
     }
 
     handleDelete = (customerId) => {
+        var data = JSON.stringify({"Id":customerId});
+
+        var config = {
+        method: 'post',
+        url: 'http://www.fulek.com/nks/api/aw/deletecustomer',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+
         console.log(customerId);
         const customers = this.state.customers.filter(
             (c) => c.Id !== customerId
         );
         this.setState({ customers });
     };
+
     handlePageChange = (page) => {
         console.log('page change', page);
         const currentPage = page;
         this.setState({ currentPage });
     };
+
     handleDDLchange = ({ target }) => {
         console.log(target.value);
     };
